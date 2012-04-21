@@ -120,7 +120,7 @@ class McMyAdmin {
 				 $data = curl_exec($ch);
 
 		if(empty($data)) {
-			throw new Exception('No content was received back. Was this the correct url?: '.var_dump(curl_getinfo($ch,CURLINFO_HEADER_OUT)));
+			throw new Exception('No content was received back from McMyAdmin.');
 		}
 			curl_close($ch);
 
