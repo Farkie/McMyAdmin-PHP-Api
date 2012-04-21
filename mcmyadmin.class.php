@@ -6,12 +6,23 @@ class McMyAdmin {
 	protected $config = array();
 	protected $logged_in = false;
 	
+	/**
+	* __construct - Optional. If chosen, script will login.
+	* user, pass, host, port = string
+	*/
 	public function __construct($user = '',$pass = '',$host = 'localhost',$port = '8080') {
 		if(!empty($user) && !empty($pass) && !empty($host) && !empty($port)) {
 			$this->login($user,$pass,$host,$port);
 		}
 	}
 	
+	/**
+	* Method Login - Used to login to the McMyAdmin server with the supplied details.
+	* user String
+	* pass String
+	* host String
+	* port String
+	*/
 	public function login($user = '',$pass = '',$host = 'localhost',$port = '8080') {
 	
 		if(!empty($user) && !empty($pass) && !empty($host) && !empty($port)) {
@@ -37,17 +48,37 @@ class McMyAdmin {
 		
 	}
 	
+	/**
+	* Method getPlayers()
+	* returns PlayerList
+	*/
 	public function getPlayers() {
 		if($this->getLoggedIn() == false) {
 			throw new Exception('Not logged into McMyAdmin');	
 		}
 		
-		$request = $this->request(array('req' => 'getStatus'));
+		$request = $this->sendCommand('getStatus');
 		
 		foreach($request->userinfo as $user => $values) {
 			$playerlist[] = $user;
 		}
 		return $playerlist;
+	}
+	
+	/**
+	* Method sendCommand
+	* This allows additonal commands to be send and returned from the McMyAdmin server.
+	*/
+	
+	public function sendCommand($command) {
+		if(!$this->getLoggedIn()) {
+			throw Exception('Not logged into McMyAdmin');	
+		}
+		if(!$command) {
+			throw Exception('No command given');	
+		}
+		
+		return $this->request(array('req' => $command));
 	}
 	
 	public function sendMessage($message) {
@@ -59,9 +90,7 @@ class McMyAdmin {
 			throw new Exception('No message given');	
 		}
 		
-		$request = $this->request(array('req' => 'sendchat','message'=>$message));
-		
-		return $request;
+		return $this->request(array('req' => 'sendchat','message'=>$message));;
 	}
 	
 	public function getLoggedIn() {
@@ -82,7 +111,7 @@ class McMyAdmin {
 		
 			 curl_setopt($ch, CURLOPT_HTTPHEADER , array('Content-type: application/json','Accept: application/json'));
 			 curl_setopt($ch, CURLOPT_FOLLOWLOCATION , 1);
-		     curl_setopt( $ch, CURLOPT_USERAGENT, 'Firefox/mozilla McMyAdminClass');
+		     curl_setopt($ch, CURLOPT_USERAGENT, 'Firefox/mozilla McMyAdminClass');
 			 curl_setopt($ch, CURLOPT_HEADER , 0);
 			 curl_setopt($ch, CURLOPT_COOKIEJAR , 'cookie.txt');
 			 curl_setopt($ch, CURLOPT_COOKIEFILE , 'cookie.txt');
