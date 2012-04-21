@@ -93,6 +93,28 @@ class McMyAdmin {
 		return $this->request(array('req' => 'sendchat','message'=>$message));;
 	}
 	
+	public function remGroupMember($group,$username) {
+		if($this->getLoggedIn() == false) {
+			throw new Exception('Not logged into McMyAdmin');	
+		}
+		if(!$group || $username) {
+			throw new Exception('Invalid arguments');	
+		}
+		
+		return $this->request(array('req'=>'removegroupvalue','type'=>'groupmembers','group'=>$group,'value'=>$username));
+	}
+	
+	public function addGroupMember($group,$username) {
+		if($this->getLoggedIn() == false) {
+			throw new Exception('Not logged into McMyAdmin');	
+		}
+		if(!$group || $username) {
+			throw new Exception('Invalid arguments');	
+		}
+		
+		return $this->request(array('req'=>'addgroupvalue','type'=>'groupmembers','group'=>$group,'value'=>$username));
+	}
+	
 	public function getLoggedIn() {
 		return $this->logged_in;	
 	}
