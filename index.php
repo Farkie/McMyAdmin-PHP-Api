@@ -8,10 +8,10 @@ $mcmyadmin = new McMyAdmin($mcconfig['username'],$mcconfig['password'],$mcconfig
 $players = $mcmyadmin->getPlayers();
 echo "Current players: " . implode(" - ",$players) . '<br />';
 
-$mcmyadmin->sendMessage('This is a message sent from php-API');
+$mcmyadmin->sendChat('This is a message sent from php-API');
 
 echo "Edition: " . $mcmyadmin->getServerInfo()->edition . '<br />';
-echo "Random Tip: " . $mcmyadmin->sendCommand('getTip')->tip . '<br />';
+echo "Random Tip: " . $mcmyadmin->getTip() . '<br />';
 
 echo print_list($mcmyadmin->getServerInfo());
 
