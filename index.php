@@ -1,17 +1,36 @@
 <?php
 
 include_once('mcmyadmin.class.php');
-$config = parse_ini_file('config.ini');
+$mcconfig = parse_ini_file('config.ini'); // Must be readable by the webserver. (644)
 
-$mcmyadmin = new McMyAdmin($config['username'],$config['password'],$config['host'],$config['port']);
+$mcmyadmin = new McMyAdmin($mcconfig['username'],$mcconfig['password'],$mcconfig['host'],$mcconfig['port']);
 
 $players = $mcmyadmin->getPlayers();
-echo implode(" - ",$players);
+echo "Current players: " . implode(" - ",$players) . '<br />';
 
-$mcmyadmin->sendMessage('This is a message');
+$mcmyadmin->sendMessage('This is a message sent from php-API');
 
-echo $mcmyadmin->sendCommand('getServerInfo')->edition;
+echo "Edition: " . $mcmyadmin->sendCommand('getServerInfo')->edition . '<br />';
+echo "Random Tip: " . $mcmyadmin->sendCommand('getTip')->tip . '<br />';
+
+echo print_list($mcmyadmin->getServerInfo());
 
 if(isset($_GET['killserver'])) {
-	$mcmyadmin->killServer();
+	$mcmyadmin->sendCommand('killServer');
+}
+
+
+function print_list($array) { 
+$str = '<ul>';
+	foreach($array as $key => $value) { 
+		$str .= '<li> ' . $key .': ';
+			if(is_object($value) || is_array($value)) {
+				$str .= print_list($value);	
+			} else {
+				$str .= $value;	
+			}
+		$str .= '</li>';
+	}
+$str .= '</ul>';
+return $str;
 }

@@ -10,7 +10,7 @@ class McMyAdmin {
 	* __construct - Optional. If chosen, script will login.
 	* user, pass, host, port = string
 	*/
-	public function __construct($user = '',$pass = '',$host = 'localhost',$port = '8080') {
+	public function __construct($user = 'admin',$pass = '',$host = 'localhost',$port = '8080') {
 		if(!empty($user) && !empty($pass) && !empty($host) && !empty($port)) {
 			$this->login($user,$pass,$host,$port);
 		}
@@ -23,7 +23,7 @@ class McMyAdmin {
 	* host String
 	* port String
 	*/
-	public function login($user = '',$pass = '',$host = 'localhost',$port = '8080') {
+	public function login($user = 'admin',$pass = '',$host = 'localhost',$port = '8080') {
 	
 		if(!empty($user) && !empty($pass) && !empty($host) && !empty($port)) {
 			$this->config['user'] = $user;
@@ -53,14 +53,15 @@ class McMyAdmin {
 	* returns PlayerList
 	*/
 	public function getPlayers() {
-		if($this->getLoggedIn() == false) {
-			throw new Exception('Not logged into McMyAdmin');	
-		}
+		$this->getLoggedIn();
 		
 		$request = $this->sendCommand('getStatus');
+		$playerlist = array();
 		
-		foreach($request->userinfo as $user => $values) {
-			$playerlist[] = $user;
+		if($request->userinfo) {
+			foreach($request->userinfo as $user => $values) {
+				$playerlist[] = $user;
+			}
 		}
 		return $playerlist;
 	}
@@ -71,9 +72,8 @@ class McMyAdmin {
 	*/
 	
 	public function sendCommand($command) {
-		if(!$this->getLoggedIn()) {
-			throw Exception('Not logged into McMyAdmin');	
-		}
+		$this->getLoggedIn();
+		
 		if(!$command) {
 			throw Exception('No command given');	
 		}
@@ -81,44 +81,73 @@ class McMyAdmin {
 		return $this->request(array('req' => $command));
 	}
 	
+	
+	/**
+	* Method sendMessage
+	* This allows messages to be sent to the Minecraft Server.
+	*/
 	public function sendMessage($message) {
-		if($this->getLoggedIn() == false) {
-			throw new Exception('Not logged into McMyAdmin');	
-		}
+		$this->getLoggedIn();
 		
 		if(!isset($message)) {
 			throw new Exception('No message given');	
 		}
 		
-		return $this->request(array('req' => 'sendchat','message'=>$message));;
+		return $this->request(array('req' => 'sendchat','message'=>$message));
 	}
 	
-	public function remGroupMember($group,$username) {
-		if($this->getLoggedIn() == false) {
-			throw new Exception('Not logged into McMyAdmin');	
-		}
+	/**
+	* Method remGroupMember
+	* This allows a group member to be removed from a group.
+	*/
+	public function remGroupMember($group,$username,$type = 'groupmembers') {
+		$this->getLoggedIn();
+		
 		if(!$group || $username) {
 			throw new Exception('Invalid arguments');	
 		}
 		
-		return $this->request(array('req'=>'removegroupvalue','type'=>'groupmembers','group'=>$group,'value'=>$username));
+		return $this->request(array('req'=>'removegroupvalue','type'=>$type,'group'=>$group,'value'=>$username));
 	}
 	
-	public function addGroupMember($group,$username) {
-		if($this->getLoggedIn() == false) {
-			throw new Exception('Not logged into McMyAdmin');	
-		}
+	/**
+	* Method addGroupMember
+	* This allows a group member to be added to a group.
+	*/
+	public function addGroupMember($group,$username,$type = 'groupmembers') {
+		$this->getLoggedIn();
+		
 		if(!$group || $username) {
 			throw new Exception('Invalid arguments');	
 		}
 		
-		return $this->request(array('req'=>'addgroupvalue','type'=>'groupmembers','group'=>$group,'value'=>$username));
+		return $this->request(array('req'=>'addgroupvalue','type'=>$type,'group'=>$group,'value'=>$username));
 	}
 	
-	public function getLoggedIn() {
-		return $this->logged_in;	
+	/**
+	* Method getServerInfo
+	* This returns the current server info
+	*/
+	public function getServerInfo() {
+		$this->getLoggedIn();
+				
+		return $this->request(array('req'=>'getServerInfo'));
 	}
 	
+	/**
+	* Method getLoggedIn
+	* This allows a method to see if user is logged in or not.
+	*/
+	private function getLoggedIn() {
+		if($this->logged_in == false) {
+			throw new Exception('Not logged into McMyAdmin');	
+		} 
+	}
+	
+	/**
+	* Method request
+	* This allows a method to send a request to the McMyAdmin data source.
+	*/
 	private function request($args = array()) {
 		if(empty($this->config['host']) || empty($this->config['port'])) {
 			throw new Exception('No host or port has been given');	
