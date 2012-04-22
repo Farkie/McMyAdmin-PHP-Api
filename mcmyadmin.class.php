@@ -762,12 +762,8 @@ class McMyAdmin {
 			$this->config['host'] = $host;
 			$this->config['port'] = $port;
 
-			$request = $this->request(array(
-											'req'=>'login',
-											'username'=>$user,
-											'password'=>$pass
-											)
-									);
+			$request = $this->request(array('req'=>'login', 'username'=>$user, 'password'=>$pass));
+			
 			if($request->success == 1){
 				$this->logged_in = true;
 			} else {
@@ -791,7 +787,7 @@ class McMyAdmin {
 	
 	/**
 	* Method getPlayers()
-    * returns PlayerList
+	* returns PlayerList
 	*/
     public function getPlayers() {
     $this->ensureLoggedIn();
@@ -815,36 +811,36 @@ class McMyAdmin {
 		if(empty($this->config['host']) || empty($this->config['port'])) {
 			throw new Exception('No host or port has been given');
 		}
-
+		
 		if(!empty($args)) {
 			$param = http_build_query($args);
 		}
-
+		
 		if(!file_exists('cookie.txt')) {
 				if(!touch('cookie.txt')) { // You might have to do this yourself.
 					throw new Exception('Please create a file named "cookie.txt" and chown it to the webserver and chmod it to 755 (Or alternatively 777 as a last case)');
 				}
 				chmod('cookie.txt','777');
 		}
-
+		
 		$url = 'http://'.$this->config['host'].':'.$this->config['port'].'/data.json?'.$param;
 		$ch = curl_init($url);
-
+		
 			 curl_setopt($ch, CURLOPT_HTTPHEADER , array('Content-type: application/json','Accept: application/json'));
 			 curl_setopt($ch, CURLOPT_FOLLOWLOCATION , 1);
-		     curl_setopt($ch, CURLOPT_USERAGENT, 'Firefox/mozilla McMyAdminClass');
+			 curl_setopt($ch, CURLOPT_USERAGENT, 'Firefox/mozilla McMyAdminClass');
 			 curl_setopt($ch, CURLOPT_HEADER , 0);
 			 curl_setopt($ch, CURLOPT_COOKIEJAR , 'cookie.txt');
 			 curl_setopt($ch, CURLOPT_COOKIEFILE , 'cookie.txt');
 			 curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 			 curl_setopt($ch, CURLOPT_RETURNTRANSFER , 1);
 				 $data = curl_exec($ch);
-
+		
 		if(empty($data)) {
 			throw new Exception('No content was received back from McMyAdmin.');
 		}
 			curl_close($ch);
-
+		
 		$data = json_decode($data);
 		
 		if(isset($data->status)) {
@@ -856,6 +852,6 @@ class McMyAdmin {
 				return current((array)$data);
 		}
 		
-		return $data;
+	return $data;
 	}
 }
