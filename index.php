@@ -10,7 +10,7 @@ echo "Current players: " . implode(" - ",$players) . '<br />';
 
 $mcmyadmin->sendMessage('This is a message sent from php-API');
 
-echo "Edition: " . $mcmyadmin->sendCommand('getServerInfo')->edition . '<br />';
+echo "Edition: " . $mcmyadmin->getServerInfo()->edition . '<br />';
 echo "Random Tip: " . $mcmyadmin->sendCommand('getTip')->tip . '<br />';
 
 echo print_list($mcmyadmin->getServerInfo());
