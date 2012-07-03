@@ -2,7 +2,7 @@
 /***********************************
 * McMyAdmin PHP API class.
 * Author: Alan Farquharson
-* Version: 0.1
+* Version: 0.2 - (McMyAdmin V:2.1.1.8)
 ***********************************/
 
 class McMyAdmin {
@@ -748,6 +748,73 @@ class McMyAdmin {
 
 	return $this->request(array('req' => 'updatemcma'));
 	}
+        
+        /**
+	* Method getBukgetCategories
+	* No Arguments	
+	* 
+	*/
+	public function getBukgetCategories () {
+	$this->ensureLoggedIn();
+
+	return $this->request(array('req' => 'getbukgetcategories'));
+	}
+
+	/**
+	* Method getBukgetPluginInfo
+	* PluginName	
+	* String	
+	*/
+	public function getBukgetPluginInfo ($pluginname) {
+	$this->ensureLoggedIn();
+
+	if(!$pluginname) {
+		throw new Exception('Invalid arguments');
+	}
+
+	return $this->request(array('req' => 'getbukgetplugininfo' , 'pluginname' => $pluginname));
+	}
+
+	/**
+	* Method getTokenAuth
+	* Username	
+	* String	
+	*/
+	public function getTokenAuth ($username) {
+	$this->ensureLoggedIn();
+
+	if(!$username) {
+		throw new Exception('Invalid arguments');
+	}
+
+	return $this->request(array('req' => 'gettokenauth' , 'username' => $username));
+	}
+
+	/**
+	* Method searchBukgetByName
+	* Name	
+	* String	
+	*/
+	public function searchBukgetByName ($name) {
+	$this->ensureLoggedIn();
+
+	if(!$name) {
+		throw new Exception('Invalid arguments');
+	}
+
+	return $this->request(array('req' => 'searchbukgetbyname' , 'name' => $name));
+	}
+
+	/**
+	* Method uploadBackup
+	* No Arguments	
+	* 	
+	*/
+	public function uploadBackup () {
+	$this->ensureLoggedIn();
+
+	return $this->request(array('req' => 'uploadbackup'));
+	}
 
 	/**
 	* Method Login - Used to login to the McMyAdmin server with the supplied details.
@@ -793,7 +860,7 @@ class McMyAdmin {
     $this->ensureLoggedIn();
 		$request = $this->getStatus();
         $playerlist = array();
-
+		
         if($request->userinfo) {
 	        foreach($request->userinfo as $user => $values) {
        	    	$playerlist[] = $user;
@@ -848,10 +915,12 @@ class McMyAdmin {
 				unset($data->status);
 		}
 		
+				
 		if(count((array)$data) == 1){ // If there is only 1 key, return it rather than use the $mcmyadmin->method()->key
 				return current((array)$data);
 		}
 		
+
 	return $data;
 	}
 }
