@@ -869,6 +869,88 @@ class McMyAdmin {
 		
     	return $playerlist;
 	}
+        
+        /**
+	* Method downloadPluginFromURL
+	* URL	
+	* String	
+	*/
+	public function downloadPluginFromURL ($url) {
+	$this->ensureLoggedIn();
+
+	if(!$url) {
+		throw new Exception('Invalid arguments');
+	}
+
+	return $this->request(array('req' => 'downloadpluginfromurl' , 'url' => $url));
+	}
+
+	/**
+	* Method getBukgetCategories
+	* No Arguments	
+	* 	
+	*/
+	public function getBukgetCategories () {
+	$this->ensureLoggedIn();
+
+	return $this->request(array('req' => 'getbukgetcategories'));
+	}
+
+	/**
+	* Method getBukgetPluginInfo
+	* PluginName	
+	* String	
+	*/
+	public function getBukgetPluginInfo ($pluginname) {
+	$this->ensureLoggedIn();
+
+	if(!$pluginname) {
+		throw new Exception('Invalid arguments');
+	}
+
+	return $this->request(array('req' => 'getbukgetplugininfo' , 'pluginname' => $pluginname));
+	}
+
+	/**
+	* Method getExtensions
+	* No Arguments	
+	* 	
+	*/
+	public function getExtensions () {
+	$this->ensureLoggedIn();
+
+	return $this->request(array('req' => 'getextensions'));
+	}
+
+	/**
+	* Method getTokenAuth
+	* Username	
+	* String	
+	*/
+	public function getTokenAuth ($username) {
+	$this->ensureLoggedIn();
+
+	if(!$username) {
+		throw new Exception('Invalid arguments');
+	}
+
+	return $this->request(array('req' => 'gettokenauth' , 'username' => $username));
+	}
+
+	/**
+	* Method renameGroup
+	* Group	NewName	
+	* String	String	
+	*/
+	public function renameGroup ($group, $newname) {
+	$this->ensureLoggedIn();
+
+	if(!$group || !$newname) {
+		throw new Exception('Invalid arguments');
+	}
+
+	return $this->request(array('req' => 'renamegroup' , 'group' => $group, 'newname' => $newname));
+	}
 
 	/**
 	* Method request
