@@ -2,7 +2,7 @@
 /***********************************
 * McMyAdmin PHP API class.
 * Author: Alan Farquharson
-* Version: 0.2 - (McMyAdmin V:2.1.1.8)
+* Version: 0.3 - (McMyAdmin V:2.2.2.0)
 ***********************************/
 
 class McMyAdmin {
