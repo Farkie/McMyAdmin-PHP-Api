@@ -2,6 +2,17 @@
 
 include_once('mcmyadmin.class.php');
 $mcconfig = parse_ini_file('config.ini'); // Must be readable by the webserver. (644)
+// Note: Please don't let config.ini be available by the web!
+
+/*
+ * Alternate Method:
+$mcconfig = array(
+    'username'  => 'admin',
+    'password'  => '',
+    'host'      => 'localhost',
+    'port'      => 9000,
+ );
+ */
 
 	$mcmyadmin = new McMyAdmin($mcconfig['username'],$mcconfig['password'],$mcconfig['host'],$mcconfig['port']);
 

@@ -2,7 +2,7 @@
 /***********************************
 * McMyAdmin PHP API class.
 * Author: Alan Farquharson
-* Version: 0.3 - (McMyAdmin V:2.2.2.0)
+* Version: 0.4 - (McMyAdmin V:2.3)
 ***********************************/
 
 class McMyAdmin {
@@ -748,17 +748,6 @@ class McMyAdmin {
 
 	return $this->request(array('req' => 'updatemcma'));
 	}
-        
-        /**
-	* Method getBukgetCategories
-	* No Arguments	
-	* 
-	*/
-	public function getBukgetCategories () {
-	$this->ensureLoggedIn();
-
-	return $this->request(array('req' => 'getbukgetcategories'));
-	}
 
 	/**
 	* Method getBukgetPluginInfo
@@ -897,21 +886,6 @@ class McMyAdmin {
 	}
 
 	/**
-	* Method getBukgetPluginInfo
-	* PluginName	
-	* String	
-	*/
-	public function getBukgetPluginInfo ($pluginname) {
-	$this->ensureLoggedIn();
-
-	if(!$pluginname) {
-		throw new Exception('Invalid arguments');
-	}
-
-	return $this->request(array('req' => 'getbukgetplugininfo' , 'pluginname' => $pluginname));
-	}
-
-	/**
 	* Method getExtensions
 	* No Arguments	
 	* 	
@@ -920,21 +894,6 @@ class McMyAdmin {
 	$this->ensureLoggedIn();
 
 	return $this->request(array('req' => 'getextensions'));
-	}
-
-	/**
-	* Method getTokenAuth
-	* Username	
-	* String	
-	*/
-	public function getTokenAuth ($username) {
-	$this->ensureLoggedIn();
-
-	if(!$username) {
-		throw new Exception('Invalid arguments');
-	}
-
-	return $this->request(array('req' => 'gettokenauth' , 'username' => $username));
 	}
 
 	/**
@@ -950,6 +909,77 @@ class McMyAdmin {
 	}
 
 	return $this->request(array('req' => 'renamegroup' , 'group' => $group, 'newname' => $newname));
+	}
+        
+        	/**
+	* Method downloadBukgetPlugin
+	* PluginName	
+	* String	
+	*/
+	public function downloadBukgetPlugin ($pluginname) {
+	$this->ensureLoggedIn();
+
+	if(!$pluginname) {
+		throw new Exception('Invalid arguments');
+	}
+
+	return $this->request(array('req' => 'downloadbukgetplugin' , 'pluginname' => $pluginname));
+	}
+
+	/**
+	* Method emcSetConfig
+	* Key	Value	
+	* String	String	
+	*/
+	public function emcSetConfig ($key, $value) {
+	$this->ensureLoggedIn();
+
+	if(!$key || !$value) {
+		throw new Exception('Invalid arguments');
+	}
+
+	return $this->request(array('req' => 'emcsetconfig' , 'key' => $key, 'value' => $value));
+	}
+
+	/**
+	* Method getBukgetPluginsInCategory
+	* CategoryName	Start	
+	* String	Int32	
+	*/
+	public function getBukgetPluginsInCategory ($categoryname, $start) {
+	$this->ensureLoggedIn();
+
+	if(!$categoryname || !$start) {
+		throw new Exception('Invalid arguments');
+	}
+
+	return $this->request(array('req' => 'getbukgetpluginsincategory' , 'categoryname' => $categoryname, 'start' => $start));
+	}
+        
+	/**
+	* Method searchBukget
+	* Query	
+	* String	
+	*/
+	public function searchBukget ($query) {
+	$this->ensureLoggedIn();
+
+	if(!$query) {
+		throw new Exception('Invalid arguments');
+	}
+
+	return $this->request(array('req' => 'searchbukget' , 'query' => $query));
+	}
+
+	/**
+	* Method sleepServer
+	* No Arguments	
+	* 	
+	*/
+	public function sleepServer () {
+	$this->ensureLoggedIn();
+
+	return $this->request(array('req' => 'sleepserver'));
 	}
 
 	/**
