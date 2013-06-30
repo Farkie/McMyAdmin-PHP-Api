@@ -30,10 +30,9 @@ $mcconfig = array(
 
 		/**
 		* To get the current version of McMyAdmin, use $mcmyadmin->getServerInfo()->edition
-		* If you use methods that return one object key, there is no need to ask for the key. Such as $mcmyadmin->getTip();
 		*/
 		echo "Edition: " . $mcmyadmin->getServerInfo()->edition . '<br />';
-		echo "Random Tip: " . $mcmyadmin->getTip() . '<br />';
+		echo "Random Tip: " . $mcmyadmin->getTip()->tip . '<br />';
 
 		/**
 		* The $mcmyadmin->getServerInfo() returns an array inside the object, (Provider). The function below is a simple recursive call to display every option.

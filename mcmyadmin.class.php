@@ -2,7 +2,7 @@
 /***********************************
 * McMyAdmin PHP API class.
 * Author: Alan Farquharson
-* Version: 0.4 - (McMyAdmin V:2.3)
+* Version: 0.5 - (McMyAdmin V:2.4.3.4)
 ***********************************/
 
 class McMyAdmin {
@@ -10,6 +10,7 @@ class McMyAdmin {
 	protected $response;
 	protected $config = array();
 	protected $logged_in = false;
+    protected $session_id = null;
 
 	/**
 	* __construct - Optional Params. If chosen, script will login.
@@ -819,7 +820,11 @@ class McMyAdmin {
 			$this->config['port'] = $port;
 
 			$request = $this->request(array('req'=>'login', 'username'=>$user, 'password'=>$pass));
-			
+
+            if (isset($request->MCMASESSIONID)) {
+                $this->session_id = $request->MCMASESSIONID;
+            }
+
 			if($request->success == 1){
 				$this->logged_in = true;
 			} else {
@@ -850,7 +855,7 @@ class McMyAdmin {
 		$request = $this->getStatus();
         $playerlist = array();
 		
-        if($request->userinfo) {
+        if(isset($request->userinfo)) {
 	        foreach($request->userinfo as $user => $values) {
        	    	$playerlist[] = $user;
             }
@@ -859,7 +864,7 @@ class McMyAdmin {
     	return $playerlist;
 	}
         
-        /**
+    /**
 	* Method downloadPluginFromURL
 	* URL	
 	* String	
@@ -979,10 +984,211 @@ class McMyAdmin {
 	public function sleepServer () {
 	$this->ensureLoggedIn();
 
-	return $this->request(array('req' => 'sleepserver'));
+	    return $this->request(array('req' => 'sleepserver'));
 	}
 
-	/**
+    /**
+     * Method createGroup
+     * Name
+     * String
+     */
+    public function createGroup ($name) {
+        $this->ensureLoggedIn();
+
+        if(!$name) {
+            throw new Exception('Invalid arguments');
+        }
+
+        return $this->request(array('req' => 'creategroup' , 'name' => $name));
+    }
+
+    /**
+     * Method deleteGroup
+     * Name
+     * String
+     */
+    public function deleteGroup ($name) {
+        $this->ensureLoggedIn();
+
+        if(!$name) {
+            throw new Exception('Invalid arguments');
+        }
+
+        return $this->request(array('req' => 'deletegroup' , 'name' => $name));
+    }
+
+    /**
+     * Method deleteLegacyBackup
+     * Index
+     * Int32
+     */
+    public function deleteLegacyBackup ($index) {
+        $this->ensureLoggedIn();
+
+        if(!$index) {
+            throw new Exception('Invalid arguments');
+        }
+
+        return $this->request(array('req' => 'deletelegacybackup' , 'index' => $index));
+    }
+
+    /**
+     * Method getBackups
+     * No Arguments
+     *
+     */
+    public function getBackups () {
+        $this->ensureLoggedIn();
+
+        return $this->request(array('req' => 'getbackups'));
+    }
+
+    /**
+     * Method getLegacyBackupList
+     * No Arguments
+     *
+     */
+    public function getLegacyBackupList () {
+        $this->ensureLoggedIn();
+
+        return $this->request(array('req' => 'getlegacybackuplist'));
+    }
+
+    /**
+     * Method getLegacyRestoreStatus
+     * No Arguments
+     *
+     */
+    public function getLegacyRestoreStatus () {
+        $this->ensureLoggedIn();
+
+        return $this->request(array('req' => 'getlegacyrestorestatus'));
+    }
+
+    /**
+     * Method getRAS
+     * No Arguments
+     *
+     */
+    public function getRAS () {
+        $this->ensureLoggedIn();
+
+        return $this->request(array('req' => 'getras'));
+    }
+
+    /**
+     * Method getWorlds
+     * No Arguments
+     *
+     */
+    public function getWorlds () {
+        $this->ensureLoggedIn();
+
+        return $this->request(array('req' => 'getworlds'));
+    }
+
+    /**
+     * Method restoreLegacyBackup
+     * Index
+     * Int32
+     */
+    public function restoreLegacyBackup ($index) {
+        $this->ensureLoggedIn();
+
+        if(!$index) {
+            throw new Exception('Invalid arguments');
+        }
+
+        return $this->request(array('req' => 'restorelegacybackup' , 'index' => $index));
+    }
+
+    /**
+     * Method scanWorlds
+     * No Arguments
+     *
+     */
+    public function scanWorlds () {
+        $this->ensureLoggedIn();
+
+        return $this->request(array('req' => 'scanworlds'));
+    }
+
+    /**
+     * Method sendRASconfigChange
+     * key	value
+     * String	String
+     */
+    public function sendRASconfigChange ($key, $value) {
+        $this->ensureLoggedIn();
+
+        if(!$key || !$value) {
+            throw new Exception('Invalid arguments');
+        }
+
+        return $this->request(array('req' => 'sendrasconfigchange' , 'key' => $key, 'value' => $value));
+    }
+
+    /**
+     * Method sendRAScursor
+     * x	y
+     * Int32	Int32
+     */
+    public function sendRAScursor ($x, $y) {
+        $this->ensureLoggedIn();
+
+        if(!$x || !$y) {
+            throw new Exception('Invalid arguments');
+        }
+
+        return $this->request(array('req' => 'sendrascursor' , 'x' => $x, 'y' => $y));
+    }
+
+    /**
+     * Method sendRASviewChange
+     * view
+     * String
+     */
+    public function sendRASviewChange ($view) {
+        $this->ensureLoggedIn();
+
+        if(!$view) {
+            throw new Exception('Invalid arguments');
+        }
+
+        return $this->request(array('req' => 'sendrasviewchange' , 'view' => $view));
+    }
+
+    /**
+     * Method setWorldBackup
+     * WorldID	Included
+     * String	Boolean
+     */
+    public function setWorldBackup ($worldid, $included) {
+        $this->ensureLoggedIn();
+
+        if(!$worldid || !$included) {
+            throw new Exception('Invalid arguments');
+        }
+
+        return $this->request(array('req' => 'setworldbackup' , 'worldid' => $worldid, 'included' => $included));
+    }
+
+    /**
+     * Method takeBackup
+     * Label	IncludePermissions	IncludePlugins	IncludeConfig	IncludeServer	IncludeWorlds
+     * String	Boolean	Boolean	Boolean	Boolean	Boolean (Optional - default value is 'True')
+     */
+    public function takeBackup ($label, $includepermissions, $includeplugins, $includeconfig, $includeserver, $includeworlds) {
+        $this->ensureLoggedIn();
+
+        if(!$label || !$includepermissions || !$includeplugins || !$includeconfig || !$includeserver || !$includeworlds) {
+            throw new Exception('Invalid arguments');
+        }
+
+        return $this->request(array('req' => 'takebackup' , 'label' => $label, 'includepermissions' => $includepermissions, 'includeplugins' => $includeplugins, 'includeconfig' => $includeconfig, 'includeserver' => $includeserver, 'includeworlds' => $includeworlds));
+    }
+
+    /**
 	* Method request
 	* This allows a method to send a request to the McMyAdmin data source.
 	*/
@@ -990,7 +1196,13 @@ class McMyAdmin {
 		if(empty($this->config['host']) || empty($this->config['port'])) {
 			throw new Exception('No host or port has been given');
 		}
-		
+
+        if (isset($this->session_id)) {
+            $args['MCMASESSIONID'] = $this->session_id;
+        }
+
+        $param = '';
+
 		if(!empty($args)) {
 			$param = http_build_query($args);
 		}
@@ -1002,7 +1214,7 @@ class McMyAdmin {
 				chmod('cookie.txt','777');
 		}
 		
-		$url = 'http://'.$this->config['host'].':'.$this->config['port'].'/data.json?'.$param;
+		$url = 'http://' . $this->config['host'] . ':' . $this->config['port'] . '/data.json?' . $param;
 		$ch = curl_init($url);
 		
 			 curl_setopt($ch, CURLOPT_HTTPHEADER , array('Content-type: application/json','Accept: application/json'));
@@ -1022,17 +1234,6 @@ class McMyAdmin {
 		
 		$data = json_decode($data);
 		
-		if(isset($data->status)) {
-			if($data->status == '200')
-				unset($data->status);
-		}
-		
-				
-		if(count((array)$data) == 1){ // If there is only 1 key, return it rather than use the $mcmyadmin->method()->key
-				return current((array)$data);
-		}
-		
-
 	return $data;
 	}
 }
