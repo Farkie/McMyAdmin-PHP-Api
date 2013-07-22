@@ -819,7 +819,7 @@ class McMyAdmin {
 			$this->config['host'] = $host;
 			$this->config['port'] = $port;
 
-			$request = $this->request(array('req'=>'login', 'username'=>$user, 'password'=>$pass));
+			$request = $this->request(array('req'=>'login', 'Username'=>$user, 'Password'=>$pass));
 
             if (isset($request->MCMASESSIONID)) {
                 $this->session_id = $request->MCMASESSIONID;
@@ -1188,7 +1188,7 @@ class McMyAdmin {
         return $this->request(array('req' => 'takebackup' , 'label' => $label, 'includepermissions' => $includepermissions, 'includeplugins' => $includeplugins, 'includeconfig' => $includeconfig, 'includeserver' => $includeserver, 'includeworlds' => $includeworlds));
     }
 
-    /**
+    /**v
 	* Method request
 	* This allows a method to send a request to the McMyAdmin data source.
 	*/
@@ -1198,7 +1198,9 @@ class McMyAdmin {
 		}
 
         if (isset($this->session_id)) {
-            $args['MCMASESSIONID'] = $this->session_id;
+          $args['MCMASESSIONID'] = $this->session_id;
+        } else {
+           $args['Token'] = '';
         }
 
         $param = '';
