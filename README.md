@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/farkie/McMyAdmin-PHP-Api.png?label=ready)](https://waffle.io/farkie/McMyAdmin-PHP-Api)  
 McMyAdmin-PHP-Api
 =================
 
