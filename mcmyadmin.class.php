@@ -824,7 +824,7 @@ class McMyAdmin {
             if (isset($request->MCMASESSIONID)) {
                 $this->session_id = $request->MCMASESSIONID;
             }
-
+            
 			if($request->success == 1){
 				$this->logged_in = true;
 			} else {
@@ -1204,7 +1204,7 @@ class McMyAdmin {
         }
 
         $param = '';
-
+        
 		if(!empty($args)) {
 			$param = http_build_query($args);
 		}
@@ -1216,7 +1216,13 @@ class McMyAdmin {
 				chmod('cookie.txt','777');
 		}
 		
-		$url = 'http://' . $this->config['host'] . ':' . $this->config['port'] . '/data.json?' . $param;
+        $protocol = 'http';
+        
+        if($this->config['port'] === "443"){
+            $protocol = 'https';
+        }
+		
+        $url = $protocol . '://' . $this->config['host'] . ':' . $this->config['port'] . '/data.json?' . $param;
 		$ch = curl_init($url);
 		
 			 curl_setopt($ch, CURLOPT_HTTPHEADER , array('Content-type: application/json','Accept: application/json'));
